@@ -1,0 +1,14 @@
+language: java
+jdk:
+  - oraclejdk8
+
+sudo: required
+services:
+  - docker
+
+cache:
+  directories:
+    - '$HOME/.gradle'
+
+install:
+  - ./gradlew install
