@@ -1,0 +1,41 @@
+= TestContainers Module for Confluent Platform (Apache Kafka, Zookeeper, etc)
+Viktor Gamov <viktor@hazelcast.com>, © 2017 Hazelcast, Inc.
+2017-10-29
+:revdate: 2017-10-29 0:30:10 -0600
+:linkattrs:
+:ast: &ast;
+:y: &#10003;
+:n: &#10008;
+:y: icon:check-sign[role="green"]
+:n: icon:check-minus[role="red"]
+:c: icon:file-text-alt[role="blue"]
+:toc: auto
+:toc-placement: auto
+:toc-position: right
+:toc-title: Table of content
+:toclevels: 3
+:idprefix:
+:idseparator: -
+:sectanchors:
+:icons: font
+:source-highlighter: highlight.js
+:highlightjs-theme: idea
+:experimental:
+
+image:https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platform.svg?branch=master["Build Status", link="https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platform"]
+
+toc::[]
+
+== The components
+
+TBD
+
+== License
+
+See LICENSE
+
+== Copyright
+
+Copyright (c) 2017 Viktor Gamov
+
+Based on http://www.testcontainers.org
