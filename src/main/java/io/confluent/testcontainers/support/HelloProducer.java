@@ -6,6 +6,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 public class HelloProducer {
 
@@ -25,7 +26,11 @@ public class HelloProducer {
       String value = "AreAwesome";
       ProducerRecord<String, String> record = new ProducerRecord<>(
           "hello_world_topic", key, value);
-      producer.send(record);
+      try {
+        producer.send(record).get();
+      } catch (InterruptedException | ExecutionException e) {
+        e.printStackTrace();
+      }
       System.out.printf("key = %s, value = %s\n", key, value);
     }
 
@@ -37,6 +42,6 @@ public class HelloProducer {
    */
   public static void main(String[] args) {
     HelloProducer helloProducer = new HelloProducer();
-    helloProducer.createProducer("localhost:9092");
+    helloProducer.createProducer("localhost:29092");
   }
 }
