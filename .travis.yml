@@ -10,5 +10,9 @@ cache:
   directories:
     - '$HOME/.gradle'
 
+before_install:
+  - docker pull confluentinc/cp-zookeeper:latest
+  - docker pull confluentinc/cp-kafka:latest
+
 install:
   - ./gradlew build
