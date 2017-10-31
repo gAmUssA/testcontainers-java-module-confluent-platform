@@ -13,8 +13,10 @@ public class ZookeeperContainer extends GenericContainer<ZookeeperContainer> {
   @Override
   protected void configure() {
     super.configure();
+
     withExposedPorts(ZOOKEEPER_PORT);
-    // withLogConsumer(new Slf4jLogConsumer(log));
+
+    withEnv("ZOOKEEPER_TICK_TIME", String.valueOf(2000));
     withEnv("ZOOKEEPER_CLIENT_PORT", String.valueOf(ZOOKEEPER_PORT));
 
   }
