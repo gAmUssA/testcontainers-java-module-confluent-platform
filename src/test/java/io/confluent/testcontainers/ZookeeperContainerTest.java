@@ -15,7 +15,7 @@ public class ZookeeperContainerTest {
   @ClassRule
   public static ZookeeperContainer
       zooCp =
-      new ZookeeperContainer("confluentinc/cp-zookeeper:3.3.0")
+      new ZookeeperContainer("confluentinc/cp-zookeeper:latest")
           .withNetworkAliases("zookeeper")
           .waitingFor(Wait.forListeningPort());
 
