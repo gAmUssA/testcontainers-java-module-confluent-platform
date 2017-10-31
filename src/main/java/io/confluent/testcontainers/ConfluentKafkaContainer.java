@@ -4,7 +4,7 @@ import org.testcontainers.containers.GenericContainer;
 
 import java.util.HashMap;
 
-class CPKafkaContainer extends GenericContainer<CPKafkaContainer> {
+class ConfluentKafkaContainer extends GenericContainer<ConfluentKafkaContainer> {
 
   // TODO: use enum with all versions
   public static final String CONFLUENTINC_CP_KAFKA_3_3_0 = "confluentinc/cp-kafka:3.3.0";
@@ -12,7 +12,7 @@ class CPKafkaContainer extends GenericContainer<CPKafkaContainer> {
   public static final int KAFKA_PORT = 9092;
   private final String zookeeperUrl;
 
-  public CPKafkaContainer(String dockerImageName, String zookeeperUrl) {
+  public ConfluentKafkaContainer(String dockerImageName, String zookeeperUrl) {
     super(dockerImageName);
     this.zookeeperUrl = zookeeperUrl;
   }
