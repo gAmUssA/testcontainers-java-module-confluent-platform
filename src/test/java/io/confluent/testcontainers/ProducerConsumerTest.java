@@ -15,6 +15,8 @@ import io.confluent.testcontainers.support.HelloProducer;
 import lombok.extern.slf4j.Slf4j;
 
 import static io.confluent.testcontainers.CPKafkaContainer.CONFLUENTINC_CP_KAFKA_3_3_0;
+import static io.confluent.testcontainers.CPKafkaContainer.CONFLUENTINC_CP_KAFKA_LATEST;
+import static io.confluent.testcontainers.CPKafkaContainer.KAFKA_PORT;
 import static io.confluent.testcontainers.ZookeeperContainer.ZOOKEEPER_PORT;
 
 @Slf4j
@@ -26,21 +28,18 @@ public class ProducerConsumerTest {
   @ClassRule
   public static ZookeeperContainer
       zooCp =
-      new ZookeeperContainer("confluentinc/cp-zookeeper:3.3.0")
+      new ZookeeperContainer("confluentinc/cp-zookeeper:latest")
           .withNetwork(network)
           .withNetworkAliases("zookeeper")
-          .waitingFor(Wait.forListeningPort())
           .withLogConsumer(new Slf4jLogConsumer(log));
 
   @ClassRule
   public static CPKafkaContainer
       cp =
-      new CPKafkaContainer(CONFLUENTINC_CP_KAFKA_3_3_0, "zookeeper:" + ZOOKEEPER_PORT)
-          .withNetworkAliases("kafka")
-          .waitingFor(Wait.forListeningPort())
+      new CPKafkaContainer(CONFLUENTINC_CP_KAFKA_LATEST, "zookeeper")
           .withNetwork(network)
+          .withNetworkAliases("kafka")
           .withLogConsumer(new Slf4jLogConsumer(log));
-
 
   @Test
   public void testProducerConsumer() {

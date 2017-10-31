@@ -14,5 +14,6 @@
 
     <logger name="org.apache.http" level="WARN"/>
     <logger name="com.github.dockerjava" level="WARN"/>
-    <logger name="io.confluent.testcontainers" level="WARN"/>
+    <logger name="io.confluent.testcontainers" level="INFO"/>
+    <logger name="org.apache.kafka" level="INFO"/>
 </configuration>
