@@ -16,7 +16,7 @@ public class KafkaSingleNodeComposeTest {
 
   @ClassRule
   public static DockerComposeContainer environment =
-      new DockerComposeContainer(new File("src/main/resources/kafka-single-node-compose.yml"))
+      new DockerComposeContainer(new File("src/test/resources/kafka-single-node-compose.yml"))
           .withExposedService("kafka_1", 29092)
           .withExposedService("zookeeper_1", 32181);
 

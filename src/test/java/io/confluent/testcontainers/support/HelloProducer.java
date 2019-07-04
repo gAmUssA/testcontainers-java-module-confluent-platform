@@ -17,6 +17,7 @@ public class HelloProducer {
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, MyProducerInterceptor.class.getName());
 
     KafkaProducer<String, String> producer = new KafkaProducer<>(
         props);
@@ -28,6 +29,7 @@ public class HelloProducer {
           "hello_world_topic", key, value);
       try {
         producer.send(record).get();
+
       } catch (InterruptedException | ExecutionException e) {
         e.printStackTrace();
       }

@@ -1,5 +1,5 @@
-= TestContainers Module for Confluent Platform (Apache Kafka, Zookeeper, etc)
-Viktor Gamov <viktor@hazelcast.com>, © 2017 Hazelcast, Inc.
+= TestContainers Module for Confluent Platform 
+Viktor Gamov <viktor@confluent.io>, © 2017 Confluent, Inc.
 2017-10-29
 :revdate: 2017-10-29 0:30:10 -0600
 :linkattrs:
@@ -26,9 +26,9 @@ image:https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platfor
 
 toc::[]
 
-== The components
+== Supported Components
 
-TBD
+* `SchemaRegistryContainer` for https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html[Schema Registry]
 
 == License
 
@@ -36,6 +36,6 @@ See LICENSE
 
 == Copyright
 
-Copyright (c) 2017 Viktor Gamov
+Copyright (c) 2019 Viktor Gamov
 
 Based on http://www.testcontainers.org
