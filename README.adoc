@@ -28,7 +28,9 @@ toc::[]
 
 == Supported Components
 
-* `SchemaRegistryContainer` for https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html[Schema Registry]
+* [x] link:src/main/java/io/confluent/testcontainers/SchemaRegistryContainer.java[`SchemaRegistryContainer`] for https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html[Schema Registry]
+* [ ] `RestProxyContainer` 
+
 
 == License
 
