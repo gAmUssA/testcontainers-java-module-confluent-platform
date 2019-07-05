@@ -23,13 +23,13 @@ public class KafkaSingleNodeComposeTest {
 
   @Test
   public void testProducerConsumer() {
-    String host = environment.getServiceHost("kafka_1",29092);
+    String host = environment.getServiceHost("kafka_1", 29092);
     Integer port = environment.getServicePort("kafka_1", 29092);
 
     HelloProducer helloProducer = new HelloProducer();
-    helloProducer.createProducer(host+":"+port);
+    helloProducer.createProducer(host + ":" + port);
 
-    HelloConsumer helloConsumer = new HelloConsumer(host+":"+port);
+    HelloConsumer helloConsumer = new HelloConsumer(host + ":" + port);
     helloConsumer.consume();
     Collection<ConsumerRecord> messages = helloConsumer.getReceivedRecords();
 

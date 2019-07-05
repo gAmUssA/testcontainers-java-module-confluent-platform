@@ -1,13 +1,15 @@
 package io.confluent.testcontainers;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testcontainers.containers.KafkaContainer;
 
 public class SchemaRegistryContainerTest {
 
   private static KafkaContainer kafka = new KafkaContainer("5.2.1");
-  
-  static {
+
+  @BeforeClass
+  public static void setUp() {
     kafka.start();
   }
 
@@ -17,5 +19,4 @@ public class SchemaRegistryContainerTest {
       schemaRegistryContainer.withKafka(kafka).start();
     }
   }
-
 }
