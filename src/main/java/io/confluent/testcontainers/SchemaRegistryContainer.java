@@ -7,6 +7,8 @@ import org.testcontainers.containers.Network;
 /**
  * This container wraps Confluent Schema Registry
  * To learn more about Schema Registry https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html
+ * 
+ * @since 0.1
  */
 public class SchemaRegistryContainer extends GenericContainer<SchemaRegistryContainer> {
 
@@ -28,6 +30,6 @@ public class SchemaRegistryContainer extends GenericContainer<SchemaRegistryCont
   }
 
   public String getTarget() {
-    return getContainerIpAddress() + ":" + getMappedPort(8081);
+    return "http://" + getContainerIpAddress() + ":" + getMappedPort(8081);
   }
 }

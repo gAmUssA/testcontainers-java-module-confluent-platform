@@ -17,16 +17,15 @@ import lombok.Getter;
 
 import static java.util.Collections.singletonList;
 
-public class HelloConsumer {
+public class TestConsumer implements MyConsumer {
 
   private final KafkaConsumer<String, String> consumer;
 
   @Getter
   private Collection<ConsumerRecord> receivedRecords;
 
-  public HelloConsumer(String bootstrapServer) {
-    this.consumer = new KafkaConsumer<>(createConsumerProperties(
-        bootstrapServer));
+  public TestConsumer(String bootstrapServer) {
+    this.consumer = new KafkaConsumer<>(createConsumerProperties(bootstrapServer));
     receivedRecords = new ArrayList<>();
   }
 
@@ -41,13 +40,13 @@ public class HelloConsumer {
   }
 
   public static void main(String[] args) {
-    HelloConsumer helloConsumer = new HelloConsumer("localhost:29092");
+    TestConsumer helloConsumer = new TestConsumer("localhost:29092");
     helloConsumer.consume();
   }
 
 
   @NotNull
-  private static Properties createConsumerProperties(String bootstrapServer) {
+  public Properties createConsumerProperties(String bootstrapServer) {
     Properties props = new Properties();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "testgroup" + new Random().nextInt());

@@ -9,8 +9,8 @@ import org.testcontainers.containers.DockerComposeContainer;
 import java.io.File;
 import java.util.Collection;
 
-import io.confluent.testcontainers.support.HelloConsumer;
-import io.confluent.testcontainers.support.HelloProducer;
+import io.confluent.testcontainers.support.TestConsumer;
+import io.confluent.testcontainers.support.TestProducer;
 
 public class KafkaSingleNodeComposeTest {
 
@@ -26,10 +26,10 @@ public class KafkaSingleNodeComposeTest {
     String host = environment.getServiceHost("kafka_1", 29092);
     Integer port = environment.getServicePort("kafka_1", 29092);
 
-    HelloProducer helloProducer = new HelloProducer();
+    TestProducer helloProducer = new TestProducer();
     helloProducer.createProducer(host + ":" + port);
 
-    HelloConsumer helloConsumer = new HelloConsumer(host + ":" + port);
+    TestConsumer helloConsumer = new TestConsumer(host + ":" + port);
     helloConsumer.consume();
     Collection<ConsumerRecord> messages = helloConsumer.getReceivedRecords();
 

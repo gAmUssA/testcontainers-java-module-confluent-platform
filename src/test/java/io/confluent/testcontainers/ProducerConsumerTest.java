@@ -9,8 +9,8 @@ import org.testcontainers.containers.output.Slf4jLogConsumer;
 
 import java.util.Collection;
 
-import io.confluent.testcontainers.support.HelloConsumer;
-import io.confluent.testcontainers.support.HelloProducer;
+import io.confluent.testcontainers.support.TestConsumer;
+import io.confluent.testcontainers.support.TestProducer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,10 +22,10 @@ public class ProducerConsumerTest {
   
   @Test
   public void testProducerConsumer() {
-    HelloProducer helloProducer = new HelloProducer();
+    TestProducer helloProducer = new TestProducer();
     helloProducer.createProducer(kafka.getBootstrapServers());
 
-    HelloConsumer helloConsumer = new HelloConsumer(kafka.getBootstrapServers());
+    TestConsumer helloConsumer = new TestConsumer(kafka.getBootstrapServers());
     helloConsumer.consume();
     Collection<ConsumerRecord> messages = helloConsumer.getReceivedRecords();
 
