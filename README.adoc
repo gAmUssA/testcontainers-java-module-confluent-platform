@@ -32,14 +32,13 @@ NOTE: While library is `0.1-SNAPSHOT` binaries hosted in jitpack
 
 [source,groovy]
 ----
-project{
+project {
   repositories {
-      maven { url 'https://jitpack.io' }
+    maven { url 'https://jitpack.io' }
   }
-  
   dependencies {
-  	        implementation 'com.github.gAmUssA:testcontainers-java-module-confluent-platform:master-SNAPSHOT'
-  	}
+    implementation 'com.github.gAmUssA:testcontainers-java-module-confluent-platform:master-SNAPSHOT'
+  }
 }
 ----
 
