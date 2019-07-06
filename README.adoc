@@ -26,9 +26,27 @@ image:https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platfor
 
 toc::[]
 
+== Getting binaries
+
+NOTE: While library is `0.1-SNAPSHOT` binaries hosted in jitpack
+
+[source,groovy]
+----
+project{
+  repositories {
+      maven { url 'https://jitpack.io' }
+  }
+  
+  dependencies {
+  	        implementation 'com.github.gAmUssA:testcontainers-java-module-confluent-platform:master-SNAPSHOT'
+  	}
+}
+----
+
 == Supported Components
 
 * [x] link:src/main/java/io/confluent/testcontainers/SchemaRegistryContainer.java[`SchemaRegistryContainer`] for https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html[Schema Registry]
+* [x] link:src/main/java/io/confluent/testcontainers/KsqlServerContainer.java[`KsqlServerContainer`] for https://docs.confluent.io/current/ksql/docs/[KSQL]
 * [ ] `RestProxyContainer` 
 
 
