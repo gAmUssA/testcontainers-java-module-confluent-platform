@@ -17,8 +17,8 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_install:
-  - docker pull confluentinc/cp-zookeeper:latest
-  - docker pull confluentinc/cp-kafka:latest
+  - docker pull confluentinc/cp-zookeeper:5.3.0
+  - docker pull confluentinc/cp-kafka:5.3.0
 
 install:
   - ./gradlew build

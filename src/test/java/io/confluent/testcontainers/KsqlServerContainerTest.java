@@ -24,8 +24,8 @@ import static org.junit.Assert.assertEquals;
 @Slf4j
 public class KsqlServerContainerTest {
 
-  private static KafkaContainer kafka = new KafkaContainer("5.2.1");
-  private static SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.2.1");
+  private static KafkaContainer kafka = new KafkaContainer("5.3.0");
+  private static SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.3.0");
   private OkHttpClient client;
 
   @BeforeClass
@@ -41,7 +41,7 @@ public class KsqlServerContainerTest {
 
   @Test
   public void shouldStartWithKafka() throws IOException {
-    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.2.1")) {
+    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.3.0")) {
       ksqlServer.withKafka(kafka)
           .withLogConsumer(new Slf4jLogConsumer(log))
           .start();
@@ -59,13 +59,13 @@ public class KsqlServerContainerTest {
           .get("KsqlServerInfo")
           .get("version")
           .asText();
-      assertEquals(expected, "5.2.1");
+      assertEquals(expected, "5.3.0");
     }
   }
 
   @Test
   public void shouldStartWithSchemaRegistry() {
-    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.2.1")) {
+    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.3.0")) {
       ksqlServer
           .withKafka(kafka)
           .withSchemaRegistry(schemaRegistry)
