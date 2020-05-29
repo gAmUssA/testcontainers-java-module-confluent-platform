@@ -38,7 +38,7 @@ public class KsqlServerContainer extends GenericContainer<KsqlServerContainer> {
   }
 
   public KsqlServerContainer withSchemaRegistry(SchemaRegistryContainer schemaRegistry) {
-    withEnv("KSQL_KSQL_SCHEMA_REGISTRY_URL", schemaRegistry.getTarget());
+    withEnv("KSQL_KSQL_SCHEMA_REGISTRY_URL", schemaRegistry.getSchemaRegistryUrl());
     return self();
   }
 

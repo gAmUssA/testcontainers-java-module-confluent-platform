@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +32,6 @@ public class KsqlServerContainerTest {
 
   private static final KafkaContainer kafka = new KafkaContainer("5.5.0").withNetwork(Network.newNetwork());
   private static final SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.0");
-  private static final KsqlServerContainer ksqlServerContainer = new KsqlServerContainer("5.5.0");
 
   @BeforeClass
   public static void setUpClass() {
@@ -41,10 +43,6 @@ public class KsqlServerContainerTest {
     kafka.start();
 
     schemaRegistry.withKafka(kafka).start();
-    ksqlServerContainer
-        .withKafka(kafka)
-        .withSchemaRegistry(schemaRegistry)
-        .start();
   }
 
   @Test
@@ -80,7 +78,8 @@ public class KsqlServerContainerTest {
           .post(ksqlServer.getTarget() + "/ksql")
           .then().contentType(ContentType.JSON).extract().response().jsonPath();
 
-      ((List<Map<String, String>>) jsonPath.getList("properties").get(0))
+      final List<Map<String, String>> properties = jsonPath.get("[0].properties");
+      properties
           .stream()
           .filter(property -> "ksql.schema.registry.url".equals(property.get("name")))
           .forEach(property -> assertThat(property.get("value"), equalTo(schemaRegistry.getSchemaRegistryUrl())));
@@ -98,66 +97,75 @@ public class KsqlServerContainerTest {
   @Test
   public void shouldCreateStream() {
 
-    String
-        statement =
-        "CREATE STREAM movies_avro (ROWKEY BIGINT KEY, title VARCHAR, release_year INT) WITH (KAFKA_TOPIC='avro-movies',           PARTITIONS=1, VALUE_FORMAT='avro');";
+    try (KsqlServerContainer ksqlServerContainer = new KsqlServerContainer("5.5.0")) {
+      ksqlServerContainer
+          .withKafka(kafka)
+          .withSchemaRegistry(schemaRegistry)
+          .withLogConsumer(new Slf4jLogConsumer(log))
+          .start();
 
-    /**
-     * [
-     *       {
-     *         "@type": "currentStatus",
-     *         "statementText": "CREATE STREAM movies_avro (ROWKEY BIGINT KEY, title VARCHAR, release_year INT)     WITH (KAFKA_TOPIC='avro-movies',           PARTITIONS=1,           VALUE_FORMAT='avro');",
-     *         "commandId": "stream/`MOVIES_AVRO`/create",
-     *         "commandStatus": {
-     *           "status": "SUCCESS",
-     *           "message": "Stream created"
-     *         },
-     *         "commandSequenceNumber": 0,
-     *         "warnings": []
-     *       }
-     *     ]
+      String
+          statement =
+          "CREATE STREAM movies_avro (ROWKEY BIGINT KEY, title VARCHAR, release_year INT) WITH (KAFKA_TOPIC='avro-movies',           PARTITIONS=1, VALUE_FORMAT='avro');";
 
-     */
-    given()
-        .body(createKsqlRequestJSON(statement, null))
-        .contentType(KSQL_REQUEST_CONTENT_TYPE)
-        .when()
-        .post(ksqlServerContainer.getTarget() + "/ksql")
-        .then()
-        .contentType(ContentType.JSON).
-        body("[0].commandStatus.status", equalTo("SUCCESS"));
+      /**
+       * [
+       *       {
+       *         "@type": "currentStatus",
+       *         "statementText": "CREATE STREAM movies_avro (ROWKEY BIGINT KEY, title VARCHAR, release_year INT)     WITH (KAFKA_TOPIC='avro-movies',           PARTITIONS=1,           VALUE_FORMAT='avro');",
+       *         "commandId": "stream/`MOVIES_AVRO`/create",
+       *         "commandStatus": {
+       *           "status": "SUCCESS",
+       *           "message": "Stream created"
+       *         },
+       *         "commandSequenceNumber": 0,
+       *         "warnings": []
+       *       }
+       *     ]
 
-    /**
-     * a response from ksqlDB server looks like
-     *
-     * [
-     *   {
-     *     "@type": "streams",
-     *     "statementText": "LIST STREAMS;",
-     *     "streams": [
-     *       {
-     *         "type": "STREAM",
-     *         "name": "MOVIES_AVRO",
-     *         "topic": "avro-movies",
-     *         "format": "AVRO"
-     *       }
-     *     ],
-     *     "warnings": []
-     *   }
-     * ]
-     */
+       */
+      given()
+          .body(createKsqlRequestJSON(statement, null))
+          .contentType(KSQL_REQUEST_CONTENT_TYPE)
+          .when()
+          .post(ksqlServerContainer.getTarget() + "/ksql")
+          .then()
+          .contentType(ContentType.JSON).
+          body("[0].commandStatus.status", equalTo("SUCCESS"));
 
-    final JsonPath jsonPath = given()
-        .body(createKsqlRequestJSON("LIST STREAMS;", null))
-        .contentType(KSQL_REQUEST_CONTENT_TYPE)
-        .when()
-        .post(ksqlServerContainer.getTarget() + "/ksql").
-            then().contentType(ContentType.JSON).extract().response().jsonPath();
+      /**
+       * a response from ksqlDB server looks like
+       *
+       * [
+       *   {
+       *     "@type": "streams",
+       *     "statementText": "LIST STREAMS;",
+       *     "streams": [
+       *       {
+       *         "type": "STREAM",
+       *         "name": "MOVIES_AVRO",
+       *         "topic": "avro-movies",
+       *         "format": "AVRO"
+       *       }
+       *     ],
+       *     "warnings": []
+       *   }
+       * ]
+       */
 
-    final Map<String, String> o = jsonPath.get("[0].streams[0]");
-    assertThat("STREAM", equalTo(o.get("type")));
-    assertThat("MOVIES_AVRO", equalTo(o.get("name")));
-    assertThat("avro-movies", equalTo(o.get("topic")));
-    assertThat("AVRO", equalTo(o.get("format")));
+      final JsonPath jsonPath = given()
+          .body(createKsqlRequestJSON("LIST STREAMS;", null))
+          .contentType(KSQL_REQUEST_CONTENT_TYPE)
+          .when()
+          .post(ksqlServerContainer.getTarget() + "/ksql").
+              then().contentType(ContentType.JSON).extract().response().jsonPath();
+
+      final Map<String, String> o = jsonPath.get("[0].streams[0]");
+      assertThat("STREAM", equalTo(o.get("type")));
+      assertThat("MOVIES_AVRO", equalTo(o.get("name")));
+      assertThat("avro-movies", equalTo(o.get("topic")));
+      assertThat("AVRO", equalTo(o.get("format")));
+
+    }
   }
 }

@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.containers.Network;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 
 import java.util.Collection;
@@ -18,7 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AvroProducerConsumerTest {
 
   public static KafkaContainer kafka = new KafkaContainer("5.5.0")
-      .withLogConsumer(new Slf4jLogConsumer(log));
+      .withLogConsumer(new Slf4jLogConsumer(log))
+      .withNetwork(Network.newNetwork());
 
   public static SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.0")
       .withLogConsumer(new Slf4jLogConsumer(log));
@@ -31,10 +33,12 @@ public class AvroProducerConsumerTest {
 
   @Test
   public void testProducerConsumer() {
-    TestAvroProducer helloProducer = new TestAvroProducer(schemaRegistry.getTarget());
+    TestAvroProducer helloProducer = new TestAvroProducer(schemaRegistry.getSchemaRegistryUrl());
     helloProducer.createProducer(kafka.getBootstrapServers());
 
-    TestAvroConsumer helloConsumer = new TestAvroConsumer(kafka.getBootstrapServers(), schemaRegistry.getTarget());
+    TestAvroConsumer
+        helloConsumer =
+        new TestAvroConsumer(kafka.getBootstrapServers(), schemaRegistry.getSchemaRegistryUrl());
     helloConsumer.consume();
 
     Collection<ConsumerRecord<String, Movie>> messages = helloConsumer.getReceivedRecords();

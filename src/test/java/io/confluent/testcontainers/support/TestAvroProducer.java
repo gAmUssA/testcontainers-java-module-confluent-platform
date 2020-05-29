@@ -10,7 +10,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import io.confluent.developer.Movie;
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 
 public class TestAvroProducer implements MyProducer {
@@ -30,7 +30,7 @@ public class TestAvroProducer implements MyProducer {
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
 
     // TODO: make named param and null check ¯\_(ツ)_/¯
-    props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+    props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
     props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, LoggingProducerInterceptor.class.getName());
 
     props.put("input.topic.name", "hello_avro_topic");
