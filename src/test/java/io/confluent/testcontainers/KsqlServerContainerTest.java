@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
