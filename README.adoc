@@ -1,5 +1,5 @@
 = TestContainers Module for Confluent Platform 
-Viktor Gamov <viktor@confluent.io>, © 2017 Confluent, Inc.
+Viktor Gamov <viktor@confluent.io>, © 2017-2020 Confluent, Inc.
 2017-10-29
 :revdate: 2017-10-29 0:30:10 -0600
 :linkattrs:
@@ -10,7 +10,7 @@ Viktor Gamov <viktor@confluent.io>, © 2017 Confluent, Inc.
 :n: icon:check-minus[role="red"]
 :c: icon:file-text-alt[role="blue"]
 :toc: auto
-:toc-placement: auto
+:toc-placement: macro
 :toc-position: right
 :toc-title: Table of content
 :toclevels: 3
@@ -22,7 +22,9 @@ Viktor Gamov <viktor@confluent.io>, © 2017 Confluent, Inc.
 :highlightjs-theme: idea
 :experimental:
 
-image:https://api.cirrus-ci.com/github/gAmUssA/testcontainers-java-module-confluent-platform.svg["Build Status, link="https://cirrus-ci.com/github/gAmUssA/testcontainers-java-module-confluent-platform"]
+* *Cirrus* image:https://api.cirrus-ci.com/github/gAmUssA/testcontainers-java-module-confluent-platform.svg?branch=master["Build Status, link="https://cirrus-ci.com/github/gAmUssA/testcontainers-java-module-confluent-platform"]
+
+* *Travis* image:https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platform.svg?branch=master["Build Status", link="https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platform"]
 
 toc::[]
 
@@ -48,13 +50,12 @@ project {
 * [x] link:src/main/java/io/confluent/testcontainers/KsqlServerContainer.java[`KsqlServerContainer`] for https://docs.confluent.io/current/ksql/docs/[KSQL]
 * [ ] `RestProxyContainer` 
 
-
 == License
 
 See LICENSE
 
 == Copyright
 
-Copyright (c) 2019 Viktor Gamov
+Copyright (c) 2020 Viktor Gamov
 
 Based on http://www.testcontainers.org
