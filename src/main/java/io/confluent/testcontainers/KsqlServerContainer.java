@@ -7,7 +7,7 @@ import org.testcontainers.containers.Network;
 import static org.testcontainers.containers.wait.strategy.Wait.forLogMessage;
 
 /**
- * This container wraps Confluent KSQL
+ * This container wraps ksqlDB container
  * To learn more about KSQL visit https://www.confluent.io/product/ksql/
  *
  * @since 0.1
@@ -15,13 +15,15 @@ import static org.testcontainers.containers.wait.strategy.Wait.forLogMessage;
 public class KsqlServerContainer extends GenericContainer<KsqlServerContainer> {
 
   private static int KSQL_PORT = 8088;
+  public static String KSQL_REQUEST_CONTENT_TYPE = "application/vnd.ksql.v1+json";
 
   public KsqlServerContainer(String version) {
-    super("confluentinc/cp-ksql-server:" + version);
+    super("confluentinc/cp-ksqldb-server:" + version);
     withExposedPorts(KSQL_PORT);
   }
 
   public KsqlServerContainer withKafka(KafkaContainer kafka) {
+    
     return withKafka(kafka.getNetwork(), kafka.getNetworkAliases().get(0) + ":9092");
   }
 
@@ -36,7 +38,7 @@ public class KsqlServerContainer extends GenericContainer<KsqlServerContainer> {
   }
 
   public KsqlServerContainer withSchemaRegistry(SchemaRegistryContainer schemaRegistry) {
-    withEnv("KSQL_SCHEMA_REGISTRY_URL", schemaRegistry.getTarget());
+    withEnv("KSQL_KSQL_SCHEMA_REGISTRY_URL", schemaRegistry.getTarget());
     return self();
   }
 

@@ -1,80 +1,163 @@
 package io.confluent.testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.containers.Network;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-import io.confluent.ksql.rest.client.KsqlRestClient;
-import io.confluent.ksql.rest.client.RestResponse;
-import io.confluent.ksql.rest.entity.KsqlEntityList;
+import io.confluent.ksql.rest.entity.KsqlRequest;
+import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
-import static java.util.Objects.requireNonNull;
-import static org.junit.Assert.assertEquals;
+import static io.confluent.testcontainers.KsqlServerContainer.KSQL_REQUEST_CONTENT_TYPE;
+import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class KsqlServerContainerTest {
 
-  private static KafkaContainer kafka = new KafkaContainer("5.3.0");
-  private static SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.3.0");
-  private OkHttpClient client;
+  private static final KafkaContainer kafka = new KafkaContainer("5.5.0").withNetwork(Network.newNetwork());
+  private static final SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.0");
+  private static final KsqlServerContainer ksqlServerContainer = new KsqlServerContainer("5.5.0");
 
   @BeforeClass
   public static void setUpClass() {
-    kafka.start();
-    schemaRegistry.withKafka(kafka).start();
-  }
 
-  @Before
-  public void setUp() {
-    client = new OkHttpClient();
+    // for ksql command topic 
+    kafka.addEnv("KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR", "1");
+    kafka.addEnv("KAFKA_TRANSACTION_STATE_LOG_MIN_ISR", "1");
+    kafka.addEnv("KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR", "1");
+    kafka.start();
+
+    schemaRegistry.withKafka(kafka).start();
+    ksqlServerContainer
+        .withKafka(kafka)
+        .withSchemaRegistry(schemaRegistry)
+        .start();
   }
 
   @Test
-  public void shouldStartWithKafka() throws IOException {
-    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.3.0")) {
+  public void shouldStartWithKafka() {
+    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.5.0")) {
       ksqlServer.withKafka(kafka)
           .withLogConsumer(new Slf4jLogConsumer(log))
           .start();
 
-      Request request = new Request.Builder().url(ksqlServer.getTarget() + "/info")
-          .get()
-          .build();
-      final Response response = client.newCall(request).execute();
-      final String string = requireNonNull(response.body()).string();
-      ObjectMapper mapper = new ObjectMapper();
-
       // https://github.com/confluentinc/ksql/blob/master/docs/developer-guide/api.rst#get-the-status-of-a-ksql-server
-      final String expected = mapper
-          .readTree(string)
-          .get("KsqlServerInfo")
-          .get("version")
-          .asText();
-      assertEquals(expected, "5.3.0");
+      get(ksqlServer.getTarget() + "/info")
+          .then()
+          .body("KsqlServerInfo.version", equalTo("5.5.0"));
     }
   }
 
   @Test
   public void shouldStartWithSchemaRegistry() {
-    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.3.0")) {
+    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.5.0")) {
       ksqlServer
           .withKafka(kafka)
           .withSchemaRegistry(schemaRegistry)
           .withLogConsumer(new Slf4jLogConsumer(log))
           .start();
 
-      final KsqlRestClient client = new KsqlRestClient(ksqlServer.getTarget());
-      final RestResponse<KsqlEntityList> properties = client.makeKsqlRequest("show properties;");
-      System.out.println(properties);
+      final String
+          ksqlRequest = createKsqlRequestJSON("show properties;", null);
+
+      final JsonPath jsonPath = given()
+          .body(ksqlRequest)
+          .contentType(KSQL_REQUEST_CONTENT_TYPE)
+          .when()
+          .post(ksqlServer.getTarget() + "/ksql")
+          .then().contentType(ContentType.JSON).extract().response().jsonPath();
+
+      ((List<Map<String, String>>) jsonPath.getList("properties").get(0))
+          .stream()
+          .filter(property -> "ksql.schema.registry.url".equals(property.get("name")))
+          .forEach(property -> assertThat(property.get("value"), equalTo(schemaRegistry.getSchemaRegistryUrl())));
     }
+  }
+
+  @SneakyThrows
+  private String createKsqlRequestJSON(final String ksqlStatement, final Map<String, ?> params) {
+    return new ObjectMapper()
+        // to properly handle `Optional` serialization
+        .registerModule(new Jdk8Module())
+        .writeValueAsString(new KsqlRequest(ksqlStatement, params, null));
+  }
+
+  @Test
+  public void shouldCreateStream() {
+
+    String
+        statement =
+        "CREATE STREAM movies_avro (ROWKEY BIGINT KEY, title VARCHAR, release_year INT) WITH (KAFKA_TOPIC='avro-movies',           PARTITIONS=1, VALUE_FORMAT='avro');";
+
+    /**
+     * [
+     *       {
+     *         "@type": "currentStatus",
+     *         "statementText": "CREATE STREAM movies_avro (ROWKEY BIGINT KEY, title VARCHAR, release_year INT)     WITH (KAFKA_TOPIC='avro-movies',           PARTITIONS=1,           VALUE_FORMAT='avro');",
+     *         "commandId": "stream/`MOVIES_AVRO`/create",
+     *         "commandStatus": {
+     *           "status": "SUCCESS",
+     *           "message": "Stream created"
+     *         },
+     *         "commandSequenceNumber": 0,
+     *         "warnings": []
+     *       }
+     *     ]
+
+     */
+    given()
+        .body(createKsqlRequestJSON(statement, null))
+        .contentType(KSQL_REQUEST_CONTENT_TYPE)
+        .when()
+        .post(ksqlServerContainer.getTarget() + "/ksql")
+        .then()
+        .contentType(ContentType.JSON).
+        body("[0].commandStatus.status", equalTo("SUCCESS"));
+
+    /**
+     * a response from ksqlDB server looks like
+     *
+     * [
+     *   {
+     *     "@type": "streams",
+     *     "statementText": "LIST STREAMS;",
+     *     "streams": [
+     *       {
+     *         "type": "STREAM",
+     *         "name": "MOVIES_AVRO",
+     *         "topic": "avro-movies",
+     *         "format": "AVRO"
+     *       }
+     *     ],
+     *     "warnings": []
+     *   }
+     * ]
+     */
+
+    final JsonPath jsonPath = given()
+        .body(createKsqlRequestJSON("LIST STREAMS;", null))
+        .contentType(KSQL_REQUEST_CONTENT_TYPE)
+        .when()
+        .post(ksqlServerContainer.getTarget() + "/ksql").
+            then().contentType(ContentType.JSON).extract().response().jsonPath();
+
+    final Map<String, String> o = jsonPath.get("[0].streams[0]");
+    assertThat("STREAM", equalTo(o.get("type")));
+    assertThat("MOVIES_AVRO", equalTo(o.get("name")));
+    assertThat("avro-movies", equalTo(o.get("topic")));
+    assertThat("AVRO", equalTo(o.get("format")));
   }
 }

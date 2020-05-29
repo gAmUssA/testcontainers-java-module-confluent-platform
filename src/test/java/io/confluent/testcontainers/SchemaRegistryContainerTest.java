@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SchemaRegistryContainerTest {
 
-  private static KafkaContainer kafka = new KafkaContainer("5.3.0");
+  private static final KafkaContainer kafka = new KafkaContainer("5.5.0");
 
   @BeforeClass
   public static void setUp() {
@@ -20,7 +20,7 @@ public class SchemaRegistryContainerTest {
 
   @Test
   public void shouldStartWithKafka() {
-    try (SchemaRegistryContainer schemaRegistryContainer = new SchemaRegistryContainer("5.3.0")) {
+    try (SchemaRegistryContainer schemaRegistryContainer = new SchemaRegistryContainer("5.5.0")) {
       schemaRegistryContainer.withKafka(kafka)
           .withLogConsumer(new Slf4jLogConsumer(log))
           .waitingFor(Wait.forHttp("/subjects")

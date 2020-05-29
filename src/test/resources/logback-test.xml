@@ -13,6 +13,7 @@
     </root>
 
     <logger name="org.apache.http" level="WARN"/>
+    <logger name="org.testcontainers" level="INFO"/>
     <logger name="com.github.dockerjava" level="WARN"/>
     <logger name="io.confluent.testcontainers" level="INFO"/>
     <logger name="org.apache.kafka" level="INFO"/>

@@ -22,7 +22,7 @@ Viktor Gamov <viktor@confluent.io>, © 2017 Confluent, Inc.
 :highlightjs-theme: idea
 :experimental:
 
-image:https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platform.svg?branch=master["Build Status", link="https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platform"]
+image:https://api.cirrus-ci.com/github/gAmUssA/testcontainers-java-module-confluent-platform.svg["Build Status, link="https://cirrus-ci.com/github/gAmUssA/testcontainers-java-module-confluent-platform"]
 
 toc::[]
 

@@ -1,9 +1,14 @@
 buildscript {
+  ext {
+    confluentVersion = '5.5.0'
+    kafkaVersion = '2.5.0'
+    tcVersion = '1.14.1'
+  }
   repositories {
     jcenter()
   }
   dependencies {
-    classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.15.1"
+    classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.19.1"
   }
 }
 
@@ -17,7 +22,10 @@ repositories {
   jcenter()
 
   maven {
-    url "http://packages.confluent.io/maven"
+    url "https://packages.confluent.io/maven"
+  }
+  maven {
+    url 'https://jitpack.io'
   }
 }
 
@@ -30,23 +38,29 @@ version "${version}"
 
 dependencies {
   implementation 'org.projectlombok:lombok:1.18.8'
-  implementation 'org.testcontainers:kafka:1.11.3'
 
-  compile 'ch.qos.logback:logback-classic:1.1.11'
+  implementation "org.testcontainers:kafka:$tcVersion"
 
-  implementation "org.apache.kafka:kafka-clients:2.2.0-cp1"
+  implementation 'ch.qos.logback:logback-classic:1.1.11'
+
+  implementation "org.apache.kafka:kafka-clients:$kafkaVersion"
   // for avro and schema registry
-  implementation "org.apache.avro:avro:1.8.2"
-  implementation "io.confluent:kafka-avro-serializer:5.2.1"
+  implementation "org.apache.avro:avro:1.9.2"
+  implementation "io.confluent:kafka-avro-serializer:$confluentVersion"
 
+  testImplementation 'io.rest-assured:rest-assured:4.3.0'
   // Use JUnit test framework
   testImplementation 'junit:junit:4.12'
-  testImplementation("com.squareup.okhttp3:okhttp:4.0.0")
-  testCompile 'org.assertj:assertj-core:3.5.2'
+  testImplementation "com.squareup.okhttp3:okhttp:4.0.0"
+  testImplementation 'org.assertj:assertj-core:3.5.2'
 
-  testImplementation( "io.confluent.ksql:ksql-rest-app:5.2.1"){
+  testImplementation("io.confluent.ksql:ksqldb-rest-model:5.5.0") {
     exclude group: 'org.slf4j', module: 'slf4j-log4j12'
   }
-  
+  testImplementation("io.confluent.ksql:ksqldb-rest-client:5.5.0") {
+    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+  }
+
+
 }
 

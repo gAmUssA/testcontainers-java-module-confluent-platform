@@ -17,9 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ProducerConsumerTest {
 
   @ClassRule
-  public static KafkaContainer kafka = new KafkaContainer("5.3.0")
+  public static KafkaContainer kafka = new KafkaContainer("5.5.0")
       .withLogConsumer(new Slf4jLogConsumer(log));
-  
+
   @Test
   public void testProducerConsumer() {
     TestProducer helloProducer = new TestProducer();
