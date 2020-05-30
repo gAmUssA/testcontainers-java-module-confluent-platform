@@ -36,6 +36,13 @@ targetCompatibility = "1.8"
 
 version "${version}"
 
+test {
+  testLogging {
+    events "passed", "skipped", "failed"
+    exceptionFormat "full"
+  }
+}
+
 dependencies {
   implementation 'org.projectlombok:lombok:1.18.8'
 
