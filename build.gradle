@@ -61,7 +61,7 @@ dependencies {
   testImplementation "com.squareup.okhttp3:okhttp:4.0.0"
   testImplementation 'org.assertj:assertj-core:3.5.2'
 
-  testImplementation("io.confluent.ksql:ksqldb-rest-model:5.5.0") {
+  testImplementation("io.confluent.ksql:ksqldb-rest-model:5.5.1") {
     exclude group: 'org.slf4j', module: 'slf4j-log4j12'
   }
   testImplementation("io.confluent.ksql:ksqldb-rest-client:5.5.0") {
