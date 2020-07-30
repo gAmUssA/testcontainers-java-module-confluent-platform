@@ -57,7 +57,7 @@ dependencies {
 
   testImplementation 'io.rest-assured:rest-assured:4.3.1'
   // Use JUnit test framework
-  testImplementation 'junit:junit:4.12'
+  testImplementation 'junit:junit:4.13'
   testImplementation "com.squareup.okhttp3:okhttp:4.0.0"
   testImplementation 'org.assertj:assertj-core:3.16.1'
 
