@@ -75,6 +75,7 @@ public class KsqlServerContainerTest {
           .post(ksqlServer.getTarget() + "/ksql")
           .then().contentType(ContentType.JSON).extract().response().jsonPath();
 
+      //  jsonPath.get("[0].properties.find {'ksql.schema.registry.url' == it['name']}")
       final List<Map<String, String>> properties = jsonPath.get("[0].properties");
       properties
           .stream()
@@ -105,20 +106,20 @@ public class KsqlServerContainerTest {
           statement =
           "CREATE STREAM movies_avro (ROWKEY BIGINT KEY, title VARCHAR, release_year INT) WITH (KAFKA_TOPIC='avro-movies',           PARTITIONS=1, VALUE_FORMAT='avro');";
 
-      /**
-       * [
-       *       {
-       *         "@type": "currentStatus",
-       *         "statementText": "CREATE STREAM movies_avro (ROWKEY BIGINT KEY, title VARCHAR, release_year INT)     WITH (KAFKA_TOPIC='avro-movies',           PARTITIONS=1,           VALUE_FORMAT='avro');",
-       *         "commandId": "stream/`MOVIES_AVRO`/create",
-       *         "commandStatus": {
-       *           "status": "SUCCESS",
-       *           "message": "Stream created"
-       *         },
-       *         "commandSequenceNumber": 0,
-       *         "warnings": []
-       *       }
-       *     ]
+      /*
+        [
+              {
+                "@type": "currentStatus",
+                "statementText": "CREATE STREAM movies_avro (ROWKEY BIGINT KEY, title VARCHAR, release_year INT)     WITH (KAFKA_TOPIC='avro-movies',           PARTITIONS=1,           VALUE_FORMAT='avro');",
+                "commandId": "stream/`MOVIES_AVRO`/create",
+                "commandStatus": {
+                  "status": "SUCCESS",
+                  "message": "Stream created"
+                },
+                "commandSequenceNumber": 0,
+                "warnings": []
+              }
+            ]
 
        */
       given()
@@ -130,24 +131,24 @@ public class KsqlServerContainerTest {
           .contentType(ContentType.JSON).
           body("[0].commandStatus.status", equalTo("SUCCESS"));
 
-      /**
-       * a response from ksqlDB server looks like
-       *
-       * [
-       *   {
-       *     "@type": "streams",
-       *     "statementText": "LIST STREAMS;",
-       *     "streams": [
-       *       {
-       *         "type": "STREAM",
-       *         "name": "MOVIES_AVRO",
-       *         "topic": "avro-movies",
-       *         "format": "AVRO"
-       *       }
-       *     ],
-       *     "warnings": []
-       *   }
-       * ]
+      /*
+        a response from ksqlDB server looks like
+       
+        [
+          {
+            "@type": "streams",
+            "statementText": "LIST STREAMS;",
+            "streams": [
+              {
+                "type": "STREAM",
+                "name": "MOVIES_AVRO",
+                "topic": "avro-movies",
+                "format": "AVRO"
+              }
+            ],
+            "warnings": []
+          }
+        ]
        */
 
       final JsonPath jsonPath = given()
