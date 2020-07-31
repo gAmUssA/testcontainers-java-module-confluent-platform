@@ -44,7 +44,7 @@ test {
 }
 
 dependencies {
-  implementation 'org.projectlombok:lombok:1.18.8'
+  implementation 'org.projectlombok:lombok:1.18.12'
 
   implementation "org.testcontainers:kafka:$tcVersion"
 
