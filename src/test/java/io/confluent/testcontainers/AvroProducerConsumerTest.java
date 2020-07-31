@@ -18,11 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AvroProducerConsumerTest {
 
-  public static KafkaContainer kafka = new KafkaContainer("5.5.0")
+  public static KafkaContainer kafka = new KafkaContainer("5.5.1")
       .withLogConsumer(new Slf4jLogConsumer(log))
       .withNetwork(Network.newNetwork());
 
-  public static SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.0")
+  public static SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.1")
       .withLogConsumer(new Slf4jLogConsumer(log));
 
   @BeforeClass

@@ -21,7 +21,7 @@ import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_
 @Slf4j
 public class ProducerTransactionTest {
 
-  public static KafkaContainer kafka = new KafkaContainer("5.5.0")
+  public static KafkaContainer kafka = new KafkaContainer("5.5.1")
       .withLogConsumer(new Slf4jLogConsumer(log));
 
   @BeforeClass

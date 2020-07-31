@@ -14,7 +14,7 @@ import static org.testcontainers.containers.wait.strategy.Wait.forLogMessage;
  */
 public class KsqlServerContainer extends GenericContainer<KsqlServerContainer> {
 
-  private static int KSQL_PORT = 8088;
+  private static final int KSQL_PORT = 8088;
   public static String KSQL_REQUEST_CONTENT_TYPE = "application/vnd.ksql.v1+json";
 
   public KsqlServerContainer(String version) {

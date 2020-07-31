@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProducerConsumerTest {
 
   @ClassRule
-  public static KafkaContainer kafka = new KafkaContainer("5.5.0")
+  public static KafkaContainer kafka = new KafkaContainer("5.5.1")
       .withLogConsumer(new Slf4jLogConsumer(log));
 
   @Test
@@ -27,7 +27,7 @@ public class ProducerConsumerTest {
 
     TestConsumer helloConsumer = new TestConsumer(kafka.getBootstrapServers());
     helloConsumer.consume();
-    Collection<ConsumerRecord> messages = helloConsumer.getReceivedRecords();
+    Collection<ConsumerRecord<String, String>> messages = helloConsumer.getReceivedRecords();
 
     Assert.assertEquals("message consumed", messages.size(), 5);
     messages.forEach(stringStringConsumerRecord -> {

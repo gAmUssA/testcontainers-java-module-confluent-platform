@@ -27,8 +27,8 @@ import static org.hamcrest.Matchers.equalTo;
 @Slf4j
 public class KsqlServerContainerTest {
 
-  private static final KafkaContainer kafka = new KafkaContainer("5.5.0").withNetwork(Network.newNetwork());
-  private static final SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.0");
+  private static final KafkaContainer kafka = new KafkaContainer("5.5.1").withNetwork(Network.newNetwork());
+  private static final SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.1");
 
   @BeforeClass
   public static void setUpClass() {
@@ -44,7 +44,7 @@ public class KsqlServerContainerTest {
 
   @Test
   public void shouldStartWithKafka() {
-    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.5.0")) {
+    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.5.1")) {
       ksqlServer.withKafka(kafka)
           .withLogConsumer(new Slf4jLogConsumer(log))
           .start();
@@ -52,13 +52,13 @@ public class KsqlServerContainerTest {
       // https://github.com/confluentinc/ksql/blob/master/docs/developer-guide/api.rst#get-the-status-of-a-ksql-server
       get(ksqlServer.getTarget() + "/info")
           .then()
-          .body("KsqlServerInfo.version", equalTo("5.5.0"));
+          .body("KsqlServerInfo.version", equalTo("5.5.1"));
     }
   }
 
   @Test
   public void shouldStartWithSchemaRegistry() {
-    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.5.0")) {
+    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.5.1")) {
       ksqlServer
           .withKafka(kafka)
           .withSchemaRegistry(schemaRegistry)
@@ -95,7 +95,7 @@ public class KsqlServerContainerTest {
   @Test
   public void shouldCreateStream() {
 
-    try (KsqlServerContainer ksqlServerContainer = new KsqlServerContainer("5.5.0")) {
+    try (KsqlServerContainer ksqlServerContainer = new KsqlServerContainer("5.5.1")) {
       ksqlServerContainer
           .withKafka(kafka)
           .withSchemaRegistry(schemaRegistry)

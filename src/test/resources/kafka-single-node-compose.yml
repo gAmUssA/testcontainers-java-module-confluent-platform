@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:5.5.1
     # network_mode: host
     ports:
       - "32181:32181"
@@ -13,10 +13,10 @@ services:
       - "moby:127.0.0.1"
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:5.5.1
     # network_mode: host
     ports:
-     - "29092:29092"
+      - "29092:29092"
     depends_on:
       - zookeeper
     environment:

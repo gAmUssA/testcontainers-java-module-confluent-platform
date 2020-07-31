@@ -22,7 +22,7 @@ public class TestConsumer implements MyConsumer {
   private final KafkaConsumer<String, String> consumer;
 
   @Getter
-  private final Collection<ConsumerRecord> receivedRecords;
+  private final Collection<ConsumerRecord<String, String>> receivedRecords;
 
   public TestConsumer(String bootstrapServer) {
     this.consumer = new KafkaConsumer<>(createConsumerProperties(bootstrapServer));

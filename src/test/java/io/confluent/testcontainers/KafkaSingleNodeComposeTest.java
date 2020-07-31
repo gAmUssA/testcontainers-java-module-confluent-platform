@@ -16,7 +16,7 @@ public class KafkaSingleNodeComposeTest {
 
   @ClassRule
   public static DockerComposeContainer environment =
-      new DockerComposeContainer(new File("src/test/resources/kafka-single-node-compose.yml"))
+      new DockerComposeContainer<>(new File("src/test/resources/kafka-single-node-compose.yml"))
           .withExposedService("kafka_1", 29092)
           .withExposedService("zookeeper_1", 32181);
 
@@ -31,7 +31,7 @@ public class KafkaSingleNodeComposeTest {
 
     TestConsumer helloConsumer = new TestConsumer(host + ":" + port);
     helloConsumer.consume();
-    Collection<ConsumerRecord> messages = helloConsumer.getReceivedRecords();
+    Collection<ConsumerRecord<String, String>> messages = helloConsumer.getReceivedRecords();
 
     Assert.assertEquals("message consumed", messages.size(), 5);
     messages.forEach(stringStringConsumerRecord -> {
