@@ -36,8 +36,18 @@ targetCompatibility = "1.8"
 
 version "${version}"
 
+tasks.withType(JavaCompile) {
+  options.compilerArgs = [
+      '-Xlint:unchecked',
+      '-Xlint:deprecation',
+      '-Werror'
+  ]
+}
+
 test {
   testLogging {
+    outputs.upToDateWhen { false }
+    showStandardStreams = false
     events "passed", "skipped", "failed"
     exceptionFormat "full"
   }
@@ -68,6 +78,7 @@ dependencies {
     exclude group: 'org.slf4j', module: 'slf4j-log4j12'
   }
 
+  testImplementation 'org.springframework.kafka:spring-kafka-test:2.5.1.RELEASE'
 
 }
 
