@@ -21,8 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import static io.confluent.testcontainers.KsqlServerContainer.KSQL_REQUEST_CONTENT_TYPE;
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class KsqlServerContainerTest {
