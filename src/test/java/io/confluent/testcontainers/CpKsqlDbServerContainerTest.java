@@ -13,26 +13,25 @@ import java.util.List;
 import java.util.Map;
 
 import io.confluent.ksql.rest.entity.KsqlRequest;
+import io.confluent.testcontainers.ksqldb.AbstractKsqlServerContainerTest;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import static io.confluent.testcontainers.KsqlServerContainer.KSQL_REQUEST_CONTENT_TYPE;
-import static io.restassured.RestAssured.get;
+import static io.confluent.testcontainers.CpKsqlDbServerContainer.KSQL_REQUEST_CONTENT_TYPE;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 @Slf4j
-public class KsqlServerContainerTest {
+public class CpKsqlDbServerContainerTest extends AbstractKsqlServerContainerTest {
 
   private static final KafkaContainer kafka = new KafkaContainer("5.5.1").withNetwork(Network.newNetwork());
   private static final SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.1");
 
   @BeforeClass
   public static void setUpClass() {
-
     // for ksql command topic 
     kafka.addEnv("KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR", "1");
     kafka.addEnv("KAFKA_TRANSACTION_STATE_LOG_MIN_ISR", "1");
@@ -44,21 +43,19 @@ public class KsqlServerContainerTest {
 
   @Test
   public void shouldStartWithKafka() {
-    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.5.1")) {
+    try (CpKsqlDbServerContainer ksqlServer = new CpKsqlDbServerContainer("5.5.1")) {
       ksqlServer.withKafka(kafka)
           .withLogConsumer(new Slf4jLogConsumer(log))
           .start();
 
       // https://github.com/confluentinc/ksql/blob/master/docs/developer-guide/api.rst#get-the-status-of-a-ksql-server
-      get(ksqlServer.getTarget() + "/info")
-          .then()
-          .body("KsqlServerInfo.version", equalTo("5.5.1"));
+      getKsqlServerInfoVersion(ksqlServer, "5.5.1");
     }
   }
 
   @Test
   public void shouldStartWithSchemaRegistry() {
-    try (KsqlServerContainer ksqlServer = new KsqlServerContainer("5.5.1")) {
+    try (CpKsqlDbServerContainer ksqlServer = new CpKsqlDbServerContainer("5.5.1")) {
       ksqlServer
           .withKafka(kafka)
           .withSchemaRegistry(schemaRegistry)
@@ -95,8 +92,8 @@ public class KsqlServerContainerTest {
   @Test
   public void shouldCreateStream() {
 
-    try (KsqlServerContainer ksqlServerContainer = new KsqlServerContainer("5.5.1")) {
-      ksqlServerContainer
+    try (CpKsqlDbServerContainer cpKsqlServerContainer = new CpKsqlDbServerContainer("5.5.1")) {
+      cpKsqlServerContainer
           .withKafka(kafka)
           .withSchemaRegistry(schemaRegistry)
           .withLogConsumer(new Slf4jLogConsumer(log))
@@ -126,7 +123,7 @@ public class KsqlServerContainerTest {
           .body(createKsqlRequestJSON(statement, null))
           .contentType(KSQL_REQUEST_CONTENT_TYPE)
           .when()
-          .post(ksqlServerContainer.getTarget() + "/ksql")
+          .post(cpKsqlServerContainer.getTarget() + "/ksql")
           .then()
           .contentType(ContentType.JSON).
           body("[0].commandStatus.status", equalTo("SUCCESS"));
@@ -155,7 +152,7 @@ public class KsqlServerContainerTest {
           .body(createKsqlRequestJSON("LIST STREAMS;", null))
           .contentType(KSQL_REQUEST_CONTENT_TYPE)
           .when()
-          .post(ksqlServerContainer.getTarget() + "/ksql").
+          .post(cpKsqlServerContainer.getTarget() + "/ksql").
               then().contentType(ContentType.JSON).extract().response().jsonPath();
 
       final Map<String, String> o = jsonPath.get("[0].streams[0]");
