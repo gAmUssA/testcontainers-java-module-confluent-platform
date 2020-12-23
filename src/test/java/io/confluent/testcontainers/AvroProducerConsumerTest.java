@@ -1,5 +1,8 @@
 package io.confluent.testcontainers;
 
+import static io.confluent.testcontainers.Constants.KAFKA_IMAGE_TAG;
+import static io.confluent.testcontainers.Constants.KAFKA_TEST_IMAGE;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -14,15 +17,16 @@ import io.confluent.developer.Movie;
 import io.confluent.testcontainers.support.TestAvroConsumer;
 import io.confluent.testcontainers.support.TestAvroProducer;
 import lombok.extern.slf4j.Slf4j;
+import org.testcontainers.utility.DockerImageName;
 
 @Slf4j
 public class AvroProducerConsumerTest {
 
-  public static KafkaContainer kafka = new KafkaContainer("5.5.1")
+  public static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse(KAFKA_TEST_IMAGE))
       .withLogConsumer(new Slf4jLogConsumer(log))
       .withNetwork(Network.newNetwork());
 
-  public static SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.1")
+  public static SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer(KAFKA_IMAGE_TAG)
       .withLogConsumer(new Slf4jLogConsumer(log));
 
   @BeforeClass

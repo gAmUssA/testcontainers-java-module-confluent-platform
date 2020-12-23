@@ -19,20 +19,22 @@ import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import static io.confluent.testcontainers.Constants.KAFKA_TEST_IMAGE;
 import static io.confluent.testcontainers.CpKsqlDbServerContainer.KSQL_REQUEST_CONTENT_TYPE;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.testcontainers.utility.DockerImageName.parse;
 
 @Slf4j
 public class CpKsqlDbServerContainerTest extends AbstractKsqlServerContainerTest {
 
-  private static final KafkaContainer kafka = new KafkaContainer("5.5.1").withNetwork(Network.newNetwork());
+  private static final KafkaContainer kafka = new KafkaContainer(parse(KAFKA_TEST_IMAGE)).withNetwork(Network.newNetwork());
   private static final SchemaRegistryContainer schemaRegistry = new SchemaRegistryContainer("5.5.1");
 
   @BeforeClass
   public static void setUpClass() {
-    // for ksql command topic 
+    // for ksql command topic
     kafka.addEnv("KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR", "1");
     kafka.addEnv("KAFKA_TRANSACTION_STATE_LOG_MIN_ISR", "1");
     kafka.addEnv("KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR", "1");
@@ -130,7 +132,7 @@ public class CpKsqlDbServerContainerTest extends AbstractKsqlServerContainerTest
 
       /*
         a response from ksqlDB server looks like
-       
+
         [
           {
             "@type": "streams",

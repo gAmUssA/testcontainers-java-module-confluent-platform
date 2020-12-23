@@ -12,16 +12,18 @@ import java.util.Properties;
 
 import lombok.extern.slf4j.Slf4j;
 
+import static io.confluent.testcontainers.Constants.KAFKA_TEST_IMAGE;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.TRANSACTIONAL_ID_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
+import static org.testcontainers.utility.DockerImageName.parse;
 
 @Slf4j
 public class ProducerTransactionTest {
 
-  public static KafkaContainer kafka = new KafkaContainer("5.5.1")
+  public static KafkaContainer kafka = new KafkaContainer(parse(KAFKA_TEST_IMAGE))
       .withLogConsumer(new Slf4jLogConsumer(log));
 
   @BeforeClass

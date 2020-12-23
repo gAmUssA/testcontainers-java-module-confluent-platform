@@ -1,5 +1,8 @@
 package io.confluent.testcontainers;
 
+import static io.confluent.testcontainers.Constants.KAFKA_TEST_IMAGE;
+import static org.testcontainers.utility.DockerImageName.parse;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -17,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProducerConsumerTest {
 
   @ClassRule
-  public static KafkaContainer kafka = new KafkaContainer("5.5.1")
+  public static KafkaContainer kafka = new KafkaContainer(parse(KAFKA_TEST_IMAGE))
       .withLogConsumer(new Slf4jLogConsumer(log));
 
   @Test
