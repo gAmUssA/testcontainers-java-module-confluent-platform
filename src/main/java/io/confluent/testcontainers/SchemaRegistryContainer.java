@@ -1,5 +1,7 @@
 package io.confluent.testcontainers;
 
+import static org.testcontainers.utility.DockerImageName.parse;
+
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.Network;
@@ -13,7 +15,7 @@ import org.testcontainers.containers.Network;
 public class SchemaRegistryContainer extends GenericContainer<SchemaRegistryContainer> {
 
   public SchemaRegistryContainer(String version) {
-    super("confluentinc/cp-schema-registry:" + version);
+    super(parse("confluentinc/cp-schema-registry:" + version));
     withExposedPorts(8081);
   }
 
