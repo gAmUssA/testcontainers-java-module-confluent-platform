@@ -62,7 +62,7 @@ dependencies {
 
   implementation "org.apache.kafka:kafka-clients:$kafkaVersion"
   // for avro and schema registry
-  implementation "org.apache.avro:avro:1.10.0"
+  implementation "org.apache.avro:avro:1.10.1"
   implementation "io.confluent:kafka-avro-serializer:$confluentVersion"
 
   testImplementation 'io.rest-assured:rest-assured:4.3.3'
