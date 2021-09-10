@@ -58,7 +58,7 @@ dependencies {
 
   implementation "org.testcontainers:kafka:$tcVersion"
 
-  implementation 'ch.qos.logback:logback-classic:1.2.3'
+  implementation 'ch.qos.logback:logback-classic:1.2.6'
 
   implementation "org.apache.kafka:kafka-clients:$kafkaVersion"
   // for avro and schema registry
