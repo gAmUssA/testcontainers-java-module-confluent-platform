@@ -1,7 +1,7 @@
 buildscript {
   ext {
     confluentVersion = '5.5.1'
-    kafkaVersion = '2.7.0'
+    kafkaVersion = '7.0.2-ce'
     tcVersion = '1.16.0'
   }
   repositories {
