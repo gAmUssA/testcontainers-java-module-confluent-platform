@@ -5,7 +5,7 @@ buildscript {
     tcVersion = '1.16.0'
   }
   repositories {
-    jcenter()
+    mavenCentral()
   }
   dependencies {
     classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.22.0"
@@ -19,7 +19,7 @@ plugins {
 }
 
 repositories {
-  jcenter()
+  mavenCentral()
 
   maven {
     url "https://packages.confluent.io/maven"
