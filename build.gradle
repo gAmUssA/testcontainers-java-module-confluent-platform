@@ -1,7 +1,7 @@
 buildscript {
   ext {
-    confluentVersion = '5.5.1'
-    kafkaVersion = '2.7.0'
+    confluentVersion = '6.2.3'
+    kafkaVersion = '2.7.2'
     tcVersion = '1.16.0'
   }
   repositories {
@@ -54,8 +54,11 @@ test {
 }
 
 dependencies {
-  implementation 'org.projectlombok:lombok:1.18.22'
-  annotationProcessor "org.projectlombok:lombok:1.18.22"
+  compileOnly 'org.projectlombok:lombok:1.18.24'
+  annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.24'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
   implementation "org.testcontainers:kafka:$tcVersion"
 
