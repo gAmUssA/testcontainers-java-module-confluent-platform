@@ -22,6 +22,9 @@ Viktor Gamov <viktor@confluent.io>, © 2017-2020 Confluent, Inc.
 :highlightjs-theme: idea
 :experimental:
 
+NOTE: **THIS LIBRARY IS DEPRICATED**. CONSIDER USING https://github.com/christophschubert/cp-testcontainers[**christophschubert/cp-testcontainers**]
+ALL FEATURES OF THIS PROJECT WILL BE AVAILABLE THERE. ALL FUTURE DEVELOPMENT WILL HAPPEN THERE AS WELL
+
 * *Cirrus* image:https://api.cirrus-ci.com/github/gAmUssA/testcontainers-java-module-confluent-platform.svg?branch=master["Build Status", link="https://cirrus-ci.com/github/gAmUssA/testcontainers-java-module-confluent-platform"]
 
 * *Travis* image:https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platform.svg?branch=master["Build Status", link="https://travis-ci.org/gAmUssA/testcontainers-java-module-confluent-platform"]
