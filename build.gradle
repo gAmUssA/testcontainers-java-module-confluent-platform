@@ -65,7 +65,7 @@ dependencies {
   implementation "org.apache.avro:avro:1.10.2"
   implementation "io.confluent:kafka-avro-serializer:$confluentVersion"
 
-  testImplementation 'io.rest-assured:rest-assured:4.3.3'
+  testImplementation 'io.rest-assured:rest-assured:5.3.0'
   // Use JUnit test framework
   testImplementation 'junit:junit:4.13.2'
   testImplementation "com.squareup.okhttp3:okhttp:4.8.0"
