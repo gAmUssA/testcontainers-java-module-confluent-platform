@@ -78,7 +78,7 @@ dependencies {
     exclude group: 'org.slf4j', module: 'slf4j-log4j12'
   }
 
-  testImplementation 'org.springframework.kafka:spring-kafka-test:2.7.6'
+  testImplementation 'org.springframework.kafka:spring-kafka-test:3.0.2'
 
 }
 
